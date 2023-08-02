@@ -27,16 +27,10 @@ const SkillBuilderForm = () => {
               value="product management associate"
               onSubmit={(value) => console.log(`search submitted: ${value}`)}
             />
-          </Col>
-        </Form.Group>
-      </Form.Row>
-      <Form.Row>
-        <Form.Group>
-          <Col>
             <Button
               variant="link"
               size="inline"
-              className="mb-2 mb-sm-0"
+              className="mb-2 mb-sm-0 btn"
               onClick={() => setHide(!hide)}
             >
               {!hide ? "Hide advanced options" : "Show advanced options"}
@@ -47,7 +41,7 @@ const SkillBuilderForm = () => {
       {!hide && (
         <>
           <Form.Row>
-            <Form.Group controlId="roles">
+            <Form.Group controlId="goal">
               <Col>
                 <Form.Label>
                   Tell us about what you want to achieve ?
@@ -67,7 +61,7 @@ const SkillBuilderForm = () => {
             </Form.Group>
           </Form.Row>
           <Form.Row>
-            <Form.Group controlId="roles">
+            <Form.Group controlId="jobs">
               <Col>
                 <Form.Label>
                   Search and select your current job title
@@ -79,15 +73,15 @@ const SkillBuilderForm = () => {
                   value={jobSelected}
                   onSelected={(value) => setJobSelected(value)}
                 >
-                  {jobs.map((goal) => (
-                    <Form.AutosuggestOption>{goal}</Form.AutosuggestOption>
+                  {jobs.map((job) => (
+                    <Form.AutosuggestOption>{job}</Form.AutosuggestOption>
                   ))}
                 </Form.Autosuggest>
               </Col>
             </Form.Group>
           </Form.Row>
           <Form.Row>
-            <Form.Group controlId="roles">
+            <Form.Group controlId="interest">
               <Col>
                 <Form.Label>What industry are you interested in ?</Form.Label>
                 <SearchField

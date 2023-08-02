@@ -1,8 +1,10 @@
 import { Helmet } from "react-helmet";
-import { SKILL_BUILDER_TITLE, text } from "./constants";
+import { SKILL_BUILDER_TITLE, text, webTechBootCamps } from "./constants";
 import SkillBuilderForm from "./SkillBuilderForm";
 import "./styles/index.scss";
 import StickyHeader from "./StickyHeader";
+import ProgramCard from "../cards/ProgramCard";
+import { CardGrid } from "@edx/paragon";
 
 const SkillBuilderPage = () => {
   const TITLE = `edx - ${SKILL_BUILDER_TITLE}`;
@@ -15,6 +17,18 @@ const SkillBuilderPage = () => {
           <p className="text-gray-600 text-justify">{text}</p>
         </div>
         <SkillBuilderForm />
+
+        <div className="cards-display">
+          <p className="pgn__form-label">
+            Boot camps for a web technology specialist
+          </p>
+
+          <div className="card-container">
+            {webTechBootCamps.map((bootcamp) => (
+              <ProgramCard {...bootcamp} />
+            ))}
+          </div>
+        </div>
       </div>
     </>
   );

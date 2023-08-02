@@ -11,3 +11,19 @@ $dark-500: #00262b !default;
     min-height: 21px;
   }
 }
+
+.card-container {
+  border: none;
+  display: flex;
+  flex-direction: row;
+  height: 100%;
+}
+
+.card {
+  margin-right: 10px;
+  min-height: 10em;
+}
+
+.pgn__searchfield {
+  height: 45px;
+}
