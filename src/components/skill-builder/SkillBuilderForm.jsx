@@ -14,7 +14,7 @@ const SkillBuilderForm = () => {
   const [goalSelected, setGoalSelected] = useState("");
   const [jobSelected, setJobSelected] = useState("");
 
-  const [value, setValue] = useState("green");
+  const [value, setValue] = useState("");
   const handleChange = (e) => setValue(e.target.value);
 
   return (
@@ -98,7 +98,7 @@ const SkillBuilderForm = () => {
               type={type}
               value={value}
               onChange={handleChange}
-              name="colors"
+              name="industry"
               columns="3"
               className="selectable-box "
             >
