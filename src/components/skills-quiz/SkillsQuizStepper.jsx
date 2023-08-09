@@ -1,30 +1,35 @@
 /* eslint-disable object-curly-newline */
-import React, { useEffect, useState, useContext, useMemo } from 'react';
+import React, { useEffect, useState, useContext, useMemo } from "react";
 import {
-  Button, Stepper, ModalDialog, Container, Form, Stack,
-} from '@edx/paragon';
-import algoliasearch from 'algoliasearch/lite';
-import { InstantSearch } from 'react-instantsearch-dom';
-import { getConfig } from '@edx/frontend-platform/config';
-import { SearchContext } from '@edx/frontend-enterprise-catalog-search';
-import { useHistory } from 'react-router-dom';
-import { AppContext } from '@edx/frontend-platform/react';
-import { sendEnterpriseTrackEvent } from '@edx/frontend-enterprise-utils';
-import { getAuthenticatedUser } from '@edx/frontend-platform/auth';
+  Button,
+  Stepper,
+  ModalDialog,
+  Container,
+  Form,
+  Stack,
+} from "@edx/paragon";
+import algoliasearch from "algoliasearch/lite";
+import { InstantSearch } from "react-instantsearch-dom";
+import { getConfig } from "@edx/frontend-platform/config";
+import { SearchContext } from "@edx/frontend-enterprise-catalog-search";
+import { useHistory } from "react-router-dom";
+import { AppContext } from "@edx/frontend-platform/react";
+import { sendEnterpriseTrackEvent } from "@edx/frontend-enterprise-utils";
+import { getAuthenticatedUser } from "@edx/frontend-platform/auth";
 
-import { camelCaseObject } from '@edx/frontend-platform/utils';
-import { logError } from '@edx/frontend-platform/logging';
-import GoalDropdown from './GoalDropdown';
-import SearchJobDropdown from './SearchJobDropdown';
-import CurrentJobDropdown from './CurrentJobDropdown';
-import IndustryDropdown from './IndustryDropdown';
-import SearchJobCard from './SearchJobCard';
-import SearchCurrentJobCard from './SearchCurrentJobCard';
-import SearchCourseCard from './SearchCourseCard';
-import SearchProgramCard from './SearchProgramCard';
-import SearchPathways from './SearchPathways';
-import SelectJobCard from './SelectJobCard';
-import SkillsCourses from './SkillsCourses';
+import { camelCaseObject } from "@edx/frontend-platform/utils";
+import { logError } from "@edx/frontend-platform/logging";
+import GoalDropdown from "./GoalDropdown";
+import SearchJobDropdown from "./SearchJobDropdown";
+import CurrentJobDropdown from "./CurrentJobDropdown";
+import IndustryDropdown from "./IndustryDropdown";
+import SearchJobCard from "./SearchJobCard";
+import SearchCurrentJobCard from "./SearchCurrentJobCard";
+import SearchCourseCard from "./SearchCourseCard";
+import SearchProgramCard from "./SearchProgramCard";
+import SearchPathways from "./SearchPathways";
+import SelectJobCard from "./SelectJobCard";
+import SkillsCourses from "./SkillsCourses";
 
 import {
   DROPDOWN_OPTION_IMPROVE_CURRENT_ROLE,
@@ -33,35 +38,38 @@ import {
   STEP3,
   SKILLS_QUIZ_SEARCH_PAGE_MESSAGE,
   GOAL_DROPDOWN_DEFAULT_OPTION,
-} from './constants';
-import { SkillsContext } from './SkillsContextProvider';
-import { SET_KEY_VALUE } from './data/constants';
-import { checkValidGoalAndJobSelected } from '../utils/skills-quiz';
-import TopSkillsOverview from './TopSkillsOverview';
-import SkillsQuizHeader from './SkillsQuizHeader';
+} from "./constants";
+import { SkillsContext } from "./SkillsContextProvider";
+import { SET_KEY_VALUE } from "./data/constants";
+import { checkValidGoalAndJobSelected } from "../utils/skills-quiz";
+import TopSkillsOverview from "./TopSkillsOverview";
+import SkillsQuizHeader from "./SkillsQuizHeader";
 
-import headerImage from './images/headerImage.png';
-import { saveSkillsGoalsAndJobsUserSelected } from './data/utils';
-import { fetchCourseEnrollments } from './data/service';
+import headerImage from "./images/headerImage.png";
+import { saveSkillsGoalsAndJobsUserSelected } from "./data/utils";
+import { fetchCourseEnrollments } from "./data/service";
 
-const SkillsQuizStepper = () => {
+const SkillsQuizStepper = ({ isStyleAutoSuggest }) => {
   const config = getConfig();
   const { userId } = getAuthenticatedUser();
-  const [searchClient, courseIndex, jobIndex] = useMemo(
-    () => {
-      const client = algoliasearch(
-        config.ALGOLIA_APP_ID,
-        config.ALGOLIA_SEARCH_API_KEY,
-      );
-      const cIndex = client.initIndex(config.ALGOLIA_INDEX_NAME);
-      const jIndex = client.initIndex(config.ALGOLIA_INDEX_NAME_JOBS);
-      return [client, cIndex, jIndex];
-    },
-    [config.ALGOLIA_APP_ID, config.ALGOLIA_INDEX_NAME, config.ALGOLIA_INDEX_NAME_JOBS, config.ALGOLIA_SEARCH_API_KEY],
-  );
+  const [searchClient, courseIndex, jobIndex] = useMemo(() => {
+    const client = algoliasearch(
+      config.ALGOLIA_APP_ID,
+      config.ALGOLIA_SEARCH_API_KEY
+    );
+    const cIndex = client.initIndex(config.ALGOLIA_INDEX_NAME);
+    const jIndex = client.initIndex(config.ALGOLIA_INDEX_NAME_JOBS);
+    return [client, cIndex, jIndex];
+  }, [
+    config.ALGOLIA_APP_ID,
+    config.ALGOLIA_INDEX_NAME,
+    config.ALGOLIA_INDEX_NAME_JOBS,
+    config.ALGOLIA_SEARCH_API_KEY,
+  ]);
   const [currentStep, setCurrentStep] = useState(STEP1);
   const [isStudentChecked, setIsStudentChecked] = useState(false);
-  const handleIsStudentCheckedChange = e => setIsStudentChecked(e.target.checked);
+  const handleIsStudentCheckedChange = (e) =>
+    setIsStudentChecked(e.target.checked);
 
   const {
     state: { selectedJob, goal, currentJobRole, interestedJobs },
@@ -74,16 +82,19 @@ const SkillsQuizStepper = () => {
   const history = useHistory();
 
   const goalNotDefault = goal !== GOAL_DROPDOWN_DEFAULT_OPTION;
-  const goalExceptImproveAndJobSelected = goalNotDefault && checkValidGoalAndJobSelected(goal, jobs, false);
-  const improveGoalAndCurrentJobSelected = goalNotDefault && checkValidGoalAndJobSelected(goal, currentJob, true);
-  const canContinueToRecommendedCourses = goalExceptImproveAndJobSelected || improveGoalAndCurrentJobSelected;
+  const goalExceptImproveAndJobSelected =
+    goalNotDefault && checkValidGoalAndJobSelected(goal, jobs, false);
+  const improveGoalAndCurrentJobSelected =
+    goalNotDefault && checkValidGoalAndJobSelected(goal, currentJob, true);
+  const canContinueToRecommendedCourses =
+    goalExceptImproveAndJobSelected || improveGoalAndCurrentJobSelected;
 
   const closeSkillsQuiz = () => {
     history.push(`/${enterpriseConfig.slug}/search`);
     sendEnterpriseTrackEvent(
       enterpriseConfig.uuid,
-      'edx.ui.enterprise.learner_portal.skills_quiz.done.clicked',
-      { userId, enterprise: enterpriseConfig.slug },
+      "edx.ui.enterprise.learner_portal.skills_quiz.done.clicked",
+      { userId, enterprise: enterpriseConfig.slug }
     );
   };
 
@@ -93,15 +104,18 @@ const SkillsQuizStepper = () => {
     if (goalExceptImproveAndJobSelected) {
       // verify if selectedJob is still checked and within first 3 jobs else
       // set first job as selected by default to show courses.
-      if (jobs?.length > 0 && ((selectedJob && !jobs?.includes(selectedJob)) || !selectedJob)) {
+      if (
+        jobs?.length > 0 &&
+        ((selectedJob && !jobs?.includes(selectedJob)) || !selectedJob)
+      ) {
         sendEnterpriseTrackEvent(
           enterpriseConfig.uuid,
-          'edx.ui.enterprise.learner_portal.skills_quiz.continue.clicked',
-          { userId, enterprise: enterpriseConfig.slug, selectedJob: jobs[0] },
+          "edx.ui.enterprise.learner_portal.skills_quiz.continue.clicked",
+          { userId, enterprise: enterpriseConfig.slug, selectedJob: jobs[0] }
         );
         skillsDispatch({
           type: SET_KEY_VALUE,
-          key: 'selectedJob',
+          key: "selectedJob",
           value: jobs[0],
         });
       }
@@ -109,12 +123,16 @@ const SkillsQuizStepper = () => {
     } else if (improveGoalAndCurrentJobSelected) {
       sendEnterpriseTrackEvent(
         enterpriseConfig.uuid,
-        'edx.ui.enterprise.learner_portal.skills_quiz.continue.clicked',
-        { userId, enterprise: enterpriseConfig.slug, selectedJob: currentJob[0] },
+        "edx.ui.enterprise.learner_portal.skills_quiz.continue.clicked",
+        {
+          userId,
+          enterprise: enterpriseConfig.slug,
+          selectedJob: currentJob[0],
+        }
       );
       skillsDispatch({
         type: SET_KEY_VALUE,
-        key: 'selectedJob',
+        key: "selectedJob",
         value: currentJob[0],
       });
       setCurrentStep(STEP2);
@@ -124,13 +142,16 @@ const SkillsQuizStepper = () => {
   useEffect(() => {
     sendEnterpriseTrackEvent(
       enterpriseConfig.uuid,
-      'edx.ui.enterprise.learner_portal.skills_quiz.started',
-      { userId, enterprise: enterpriseConfig.slug },
+      "edx.ui.enterprise.learner_portal.skills_quiz.started",
+      { userId, enterprise: enterpriseConfig.slug }
     );
   }, [enterpriseConfig.slug, enterpriseConfig.uuid, userId]);
 
   // will be true if goal changed not because of first render.
-  const [industryAndJobsDropdownsVisible, setIndustryAndJobsDropdownsVisible] = useState(false);
+  const [
+    industryAndJobsDropdownsVisible,
+    setIndustryAndJobsDropdownsVisible,
+  ] = useState(false);
 
   useEffect(() => {
     if (goal !== GOAL_DROPDOWN_DEFAULT_OPTION) {
@@ -148,10 +169,12 @@ const SkillsQuizStepper = () => {
       try {
         const response = await fetchCourseEnrollments();
         const enrolledCourses = camelCaseObject(response.data);
-        const enrolledCourseIds = enrolledCourses.map((course) => course.courseDetails.courseId);
+        const enrolledCourseIds = enrolledCourses.map(
+          (course) => course.courseDetails.courseId
+        );
         skillsDispatch({
           type: SET_KEY_VALUE,
-          key: 'enrolledCourseIds',
+          key: "enrolledCourseIds",
           value: enrolledCourseIds,
         });
       } catch (error) {
@@ -173,10 +196,8 @@ const SkillsQuizStepper = () => {
         onClose={closeSkillsQuiz}
       >
         <ModalDialog.Hero className="bg-img">
-          <ModalDialog.Hero.Background
-            backgroundSrc={headerImage}
-          />
-          <ModalDialog.Hero.Content style={{ maxWidth: '15rem' }}>
+          <ModalDialog.Hero.Background backgroundSrc={headerImage} />
+          <ModalDialog.Hero.Content style={{ maxWidth: "15rem" }}>
             <SkillsQuizHeader />
           </ModalDialog.Hero.Content>
         </ModalDialog.Hero>
@@ -184,9 +205,7 @@ const SkillsQuizStepper = () => {
           <Container size="lg">
             <Stepper.Step eventKey="skills-search" title="Skills Search">
               <div className="skills-quiz-dropdown my-4">
-                <p>
-                  {SKILLS_QUIZ_SEARCH_PAGE_MESSAGE}
-                </p>
+                <p>{SKILLS_QUIZ_SEARCH_PAGE_MESSAGE}</p>
                 <p className="mt-4.5">
                   First, tell us a bit more about what you want to achieve.
                 </p>
@@ -200,21 +219,29 @@ const SkillsQuizStepper = () => {
                       searchClient={searchClient}
                     >
                       <div className="mt-4.5">
-                        Second, which industry describes where you work? (select one, or leave blank)
+                        Second, which industry describes where you work? (select
+                        one, or leave blank)
                       </div>
                       <div className="col col-8 p-0 mt-3">
-                        <IndustryDropdown />
+                        <IndustryDropdown
+                          isStyleAutoSuggest={isStyleAutoSuggest}
+                        />
                       </div>
 
-                      <div className="mt-2">
-                        <p className="mt-4.5">
-                          Next, tell us about your current job title.
-                        </p>
-                        <CurrentJobDropdown />
+                      {/* <div className="mt-2"> */}
+                      <p className="mt-4.5">
+                        Next, tell us about your current job title.
+                      </p>
+                      <div className="col col-8 p-0 mt-3">
+                        <CurrentJobDropdown
+                          isStyleAutoSuggest={isStyleAutoSuggest}
+                        />
                         <Form.Checkbox
                           checked={isStudentChecked}
                           onChange={handleIsStudentCheckedChange}
-                          disabled={goal === DROPDOWN_OPTION_IMPROVE_CURRENT_ROLE}
+                          disabled={
+                            goal === DROPDOWN_OPTION_IMPROVE_CURRENT_ROLE
+                          }
                           data-testid="is-student-checkbox"
                         >
                           I am currently a student
@@ -222,32 +249,40 @@ const SkillsQuizStepper = () => {
                       </div>
 
                       <div>
-                        {goal !== DROPDOWN_OPTION_IMPROVE_CURRENT_ROLE
-                          ? (
-                            <>
-                              <p className="mt-4.5">
-                                Lastly, tell us about career paths you&apos;re interested in (select up to three)
-                              </p>
-                              <div className="mt-2">
-                                <SearchJobDropdown />
-                              </div>
-                            </>
-                          ) : null}
+                        {goal !== DROPDOWN_OPTION_IMPROVE_CURRENT_ROLE ? (
+                          <>
+                            <p className="mt-4.5">
+                              Lastly, tell us about career paths you&apos;re
+                              interested in (select up to three)
+                            </p>
+                            <div className="col col-8 p-0 mt-3">
+                              <SearchJobDropdown
+                                isChip={true}
+                                isStyleAutoSuggest={isStyleAutoSuggest}
+                              />
+                            </div>
+                          </>
+                        ) : null}
                       </div>
                     </InstantSearch>
                   </div>
                 )}
                 {industryAndJobsDropdownsVisible && (
                   <>
-                    {goalExceptImproveAndJobSelected
-                      ? <SearchJobCard index={jobIndex} /> : null}
-                    {improveGoalAndCurrentJobSelected
-                      ? <SearchCurrentJobCard index={jobIndex} /> : null}
+                    {goalExceptImproveAndJobSelected ? (
+                      <SearchJobCard index={jobIndex} />
+                    ) : null}
+                    {improveGoalAndCurrentJobSelected ? (
+                      <SearchCurrentJobCard index={jobIndex} />
+                    ) : null}
                   </>
                 )}
               </div>
             </Stepper.Step>
-            <Stepper.Step eventKey="courses-with-jobs" title="Recommended Courses With Jobs">
+            <Stepper.Step
+              eventKey="courses-with-jobs"
+              title="Recommended Courses With Jobs"
+            >
               <div>
                 <div className="row mb-4 pl-2 mt-4">
                   <h2>Start Exploring Courses!</h2>
@@ -257,7 +292,8 @@ const SkillsQuizStepper = () => {
                 </div>
                 <TopSkillsOverview index={jobIndex} />
                 <div>
-                  {(selectedJob || goal === DROPDOWN_OPTION_IMPROVE_CURRENT_ROLE) && (
+                  {(selectedJob ||
+                    goal === DROPDOWN_OPTION_IMPROVE_CURRENT_ROLE) && (
                     <Stack gap={4}>
                       <SearchCourseCard index={courseIndex} />
                       <SearchProgramCard index={courseIndex} />
@@ -267,12 +303,18 @@ const SkillsQuizStepper = () => {
                 </div>
               </div>
               <div className="text-center py-4">
-                <Button variant="outline-primary" onClick={() => setCurrentStep(STEP3)}>
+                <Button
+                  variant="outline-primary"
+                  onClick={() => setCurrentStep(STEP3)}
+                >
                   See more course recommendations
                 </Button>
               </div>
             </Stepper.Step>
-            <Stepper.Step eventKey="courses-with-skills" title="Recommended Courses With Skills">
+            <Stepper.Step
+              eventKey="courses-with-skills"
+              title="Recommended Courses With Skills"
+            >
               <SkillsCourses index={courseIndex} />
             </Stepper.Step>
           </Container>
@@ -291,14 +333,20 @@ const SkillsQuizStepper = () => {
             </Button>
           </Stepper.ActionRow>
           <Stepper.ActionRow eventKey="courses-with-jobs">
-            <Button variant="outline-primary" onClick={() => setCurrentStep(STEP1)}>
+            <Button
+              variant="outline-primary"
+              onClick={() => setCurrentStep(STEP1)}
+            >
               Go back
             </Button>
             <Stepper.ActionRow.Spacer />
             <Button onClick={() => setCurrentStep(STEP3)}>Continue</Button>
           </Stepper.ActionRow>
           <Stepper.ActionRow eventKey="courses-with-skills">
-            <Button variant="outline-primary" onClick={() => setCurrentStep(STEP2)}>
+            <Button
+              variant="outline-primary"
+              onClick={() => setCurrentStep(STEP2)}
+            >
               Go back
             </Button>
             <Stepper.ActionRow.Spacer />
