@@ -33,3 +33,6 @@ export const webTechBootCamps = [
     subtitle: "University of British Columbia",
   },
 ];
+export const closeModalText =
+  "Learners who enroll in courses that align with their career goals\
+                      are more likely to complete the course";

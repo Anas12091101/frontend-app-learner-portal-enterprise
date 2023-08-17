@@ -1,4 +1,6 @@
 $gray-500: #707070;
+$max-sm-modal-width: 28rem !important;
+$min-sm-modal-height: 16rem !important;
 
 .page-body {
   display: flex;
@@ -27,4 +29,9 @@ $gray-500: #707070;
   .form-control {
     color: $gray-500;
   }
+}
+
+.modal-small {
+  max-width: $max-sm-modal-width;
+  min-height: $min-sm-modal-height;
 }
