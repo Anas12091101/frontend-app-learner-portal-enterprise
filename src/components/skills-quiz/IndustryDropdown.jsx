@@ -1,10 +1,10 @@
 import React, { useContext } from "react";
 import { SearchContext } from "@edx/frontend-enterprise-catalog-search";
 import FacetListRefinement from "@edx/frontend-enterprise-catalog-search/FacetListRefinement";
-
+import PropTypes from "prop-types";
 import { INDUSTRY_ATTRIBUTE_NAME, INDUSTRY_FACET } from "./constants";
 
-const IndustryDropdown = ({ isStyleAutoSuggest }) => {
+const IndustryDropdown = ({ isStyleAutoSuggest, isStyleSearchBox }) => {
   const { refinements } = useContext(SearchContext);
   const { title, attribute, typeaheadOptions, facetValueType } = INDUSTRY_FACET;
 
@@ -26,8 +26,14 @@ const IndustryDropdown = ({ isStyleAutoSuggest }) => {
       searchable={!!typeaheadOptions}
       showBadge={false}
       isStyleAutoSuggest={isStyleAutoSuggest}
+      isStyleSearchBox={isStyleSearchBox}
     />
   );
+};
+
+IndustryDropdown.propTypes = {
+  isStyleAutoSuggest: PropTypes.bool,
+  isStyleSearchBox: PropTypes.bool,
 };
 
 export default IndustryDropdown;

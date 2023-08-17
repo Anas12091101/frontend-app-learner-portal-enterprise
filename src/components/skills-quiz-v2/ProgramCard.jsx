@@ -1,4 +1,5 @@
 import { Card, useMediaQuery, breakpoints } from "@edx/paragon";
+import PropTypes from "prop-types";
 
 const ProgramCard = ({ mainImg, logoImg, title, subtitle }) => {
   const isExtraSmall = useMediaQuery({ maxWidth: breakpoints.small.maxWidth });
@@ -14,4 +15,10 @@ const ProgramCard = ({ mainImg, logoImg, title, subtitle }) => {
     </Card>
   );
 };
+
+ProgramCard.PropTypes = {
+  title: PropTypes.string,
+  subtitle: PropTypes.string,
+};
+
 export default ProgramCard;

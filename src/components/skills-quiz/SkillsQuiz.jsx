@@ -9,11 +9,12 @@ import { Container, Row } from "@edx/paragon";
 import { MainContent } from "../layout";
 import SkillsQuizStepper from "./SkillsQuizStepper";
 import { SkillsContextProvider } from "./SkillsContextProvider";
+import SkillsQuizV2 from "../skills-quiz-v2/SkillsQuiz";
 
 const SkillsQuiz = () => {
   const { enterpriseConfig } = useContext(AppContext);
   const PAGE_TITLE = `Skills Quiz - ${enterpriseConfig.name}`;
-
+  const v1 = false;
   return (
     <>
       <Helmet title={PAGE_TITLE} />
@@ -22,7 +23,11 @@ const SkillsQuiz = () => {
           <MainContent>
             <SearchData>
               <SkillsContextProvider>
-                <SkillsQuizStepper isStyleAutoSuggest={true} />
+                {v1 ? (
+                  <SkillsQuizStepper isStyleAutoSuggest={false} />
+                ) : (
+                  <SkillsQuizV2 isStyleAutoSuggest={true} />
+                )}
               </SkillsContextProvider>
             </SearchData>
           </MainContent>

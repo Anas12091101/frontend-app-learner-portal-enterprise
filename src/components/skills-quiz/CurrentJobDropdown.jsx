@@ -1,10 +1,10 @@
 import React, { useContext } from "react";
 import { SearchContext } from "@edx/frontend-enterprise-catalog-search";
 import FacetListRefinement from "@edx/frontend-enterprise-catalog-search/FacetListRefinement";
-
+import PropTypes from "prop-types";
 import { CURRENT_JOB_FACET } from "./constants";
 
-const CurrentJobDropdown = ({ isStyleAutoSuggest }) => {
+const CurrentJobDropdown = ({ isStyleAutoSuggest, isChip }) => {
   const { refinements } = useContext(SearchContext);
   const {
     title,
@@ -34,8 +34,13 @@ const CurrentJobDropdown = ({ isStyleAutoSuggest }) => {
       showBadge={false}
       variant="default"
       isStyleAutoSuggest={isStyleAutoSuggest}
+      isChip={isChip}
     />
   );
+};
+CurrentJobDropdown.propTypes = {
+  isStyleAutoSuggest: PropTypes.bool,
+  isChip: PropTypes.bool,
 };
 
 export default CurrentJobDropdown;
